@@ -6,7 +6,7 @@ function Location () {
     const [countries, setCountries] = useState([]);
     const [states, setStates] = useState([]);
     const [cities, setCities] = useState([]);
-    const [selectedCountry, setSelectedCountry] = useState([]);
+    const [selectedCountry, setSelectedCountry] = useState('');
     const [selectedState, setSelectedState] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
     const [locationStatement, setLocationStatement] = useState('');
@@ -62,36 +62,49 @@ function Location () {
 
     return (
         <div>
-            <h2>Select Location</h2>
-            <form >
-                <select id='countrySelect' value={selectedCountry} onChange={handleCountryChange}>
-                    <option value=''>Select Country</option>
-                    {countries.map(country => (
-                        <option key={country} value={country}>{country}</option>
-                    ))}
-                </select>
-
-                
-                <select id='stateSelect' value={selectedState} onChange={handleStateChange} disabled={!selectedCountry}>
-                    <option value=''>Select State</option>
-                    {states.map(state => (
-                        <option key={state} value={state}>{state}</option>
-                    ))}
-                </select>
-
-                
-                <select id='citySelect' value={selectedCity} onChange={handleCityChange} disabled={!selectedState}>
-                    <option value=''>Select City</option>
-                    {cities.map(city => (
-                        <option key={city} value={city}>{city}</option>
-                    ))}
-                </select>
-            </form>
-            {locationStatement && (
-                <h2>{locationStatement}</h2>
-            )}
+          <h2>Select Location</h2>
+          <form>           
+            <select
+              id="countrySelect"
+              value={selectedCountry}
+              onChange={handleCountryChange}
+              style={{ padding: '8px', marginRight: '8px' }} >
+              <option value="">Select Country</option>
+              {countries.map(country => (
+                <option key={country} value={country}>{country}</option>
+              ))}
+            </select>
+    
+            <select
+              id="stateSelect"
+              value={selectedState}
+              onChange={handleStateChange}
+              disabled={!selectedCountry}
+              style={{ padding: '8px', marginRight: '8px' }}>
+              <option value="">Select State</option>
+              {states.map(state => (
+                <option key={state} value={state}>{state}</option>
+              ))}
+            </select>
+    
+            <select
+              id="citySelect"
+              value={selectedCity}
+              onChange={handleCityChange}
+              disabled={!selectedState}
+              style={{ padding: '8px', marginRight: '8px' }}>
+              <option value="">Select City</option>
+              {cities.map(city => (
+                <option key={city} value={city}>{city}</option>
+              ))}
+            </select>
+          </form>
+    
+          {selectedCity && (
+            <h3>{locationStatement}</h3>
+          )}
         </div>
-    )
+      );
 
 
 };
