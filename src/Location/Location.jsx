@@ -29,9 +29,9 @@ const Location = () => {
         )
         .then((response) => {
           setStates(response.data);
-          setSelectedState(""); // Reset state selection
-          setCities([]); // Clear cities
-          setSelectedCity(""); // Reset city selection
+          setSelectedState(""); 
+          setCities([]); 
+          setSelectedCity(""); 
         })
         .catch((error) => {
           console.error("Error fetching states:", error);
@@ -47,7 +47,7 @@ const Location = () => {
         )
         .then((response) => {
           setCities(response.data);
-          setSelectedCity(""); // Reset city selection
+          setSelectedCity(""); 
         })
         .catch((error) => {
           console.error("Error fetching cities:", error);
