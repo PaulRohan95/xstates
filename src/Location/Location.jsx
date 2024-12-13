@@ -9,55 +9,56 @@ const Location = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const fetchData = async (url, setData, resetData = []) => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await axios.get(url);
+      setData(response.data);
+      if (resetData.length > 0) resetData.forEach((fn) => fn([]));
+    } catch (err) {
+      setError("An error occurred while fetching data. Please try again.");
+      console.error("API error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    axios
-      .get("https://crio-location-selector.onrender.com/countries")
-      .then((response) => {
-        setCountries(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching countries:", error);
-      });
+    fetchData(
+      "https://crio-location-selector.onrender.com/countries",
+      setCountries
+    );
   }, []);
 
   useEffect(() => {
     if (selectedCountry) {
-      axios
-        .get(
-          `https://crio-location-selector.onrender.com/country=${selectedCountry}/states`
-        )
-        .then((response) => {
-          setStates(response.data);
-          setSelectedState(""); 
-          setCities([]); 
-          setSelectedCity(""); 
-        })
-        .catch((error) => {
-          console.error("Error fetching states:", error);
-        });
+      fetchData(
+        `https://crio-location-selector.onrender.com/country=${selectedCountry}/states`,
+        setStates,
+        [() => setCities([]), () => setSelectedState(""), () => setSelectedCity("")]
+      );
     }
   }, [selectedCountry]);
 
   useEffect(() => {
     if (selectedCountry && selectedState) {
-      axios
-        .get(
-          `https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${selectedState}/cities`
-        )
-        .then((response) => {
-          setCities(response.data);
-          setSelectedCity(""); 
-        })
-        .catch((error) => {
-          console.error("Error fetching cities:", error);
-        });
+      fetchData(
+        `https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${selectedState}/cities`,
+        setCities,
+        [() => setSelectedCity("")]
+      );
     }
   }, [selectedCountry, selectedState]);
 
   return (
     <div className={styles["city-selector"]}>
       <h1>Select Location</h1>
+      {loading && <p>Loading...</p>}
+      {error && <p className={styles.error}>{error}</p>}
       <div className={styles.dropdowns}>
         <select
           value={selectedCountry}
